@@ -1,0 +1,54 @@
+<div class="container p-5 my-5">
+  <div class="col-6 m-auto py-5 my-5">
+    <% if flash[:alert] %>
+      <div class="alert alert-danger text-center">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="alert alert-info text-center">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <h2 class="text-center">Log In</h2>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'w-100', style: 'max-width: 400px; margin: auto;' }) do |f| %>
+      <% if resource.errors.any? %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= f.label :email, class: 'form-label' %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: "Enter your email" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :password, class: 'form-label' %>
+        <%= f.password_field :password, autocomplete: "current-password", class: 'form-control', placeholder: "Enter your password" %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="form-check mb-3">
+          <%= f.check_box :remember_me, class: 'form-check-input' %>
+          <%= f.label :remember_me, class: 'form-check-label' %>
+        </div>
+      <% end %>
+
+      <div class="text-center">
+        <%= f.submit "Log in", class: 'btn btn-primary w-100' %>
+      </div>
+    <% end %>
+
+    <div class="text-center mt-3">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>
