@@ -1,0 +1,93 @@
+
+<!-- app/views/rooms/index.html.erb -->
+<div class="row mb-4">
+  <div class="col">
+    <h1>Rooms</h1>
+  </div>
+  <% if current_user.admin? %>
+    <div class="col-auto">
+      <%= link_to new_room_path, class: "btn btn-primary" do %>
+        <i class="bi bi-plus-lg"></i> New Room
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <% if current_user.admin? %>
+      <table class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
+          <tr>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th>Price/Hour</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @rooms.each do |room| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <%= image_tag 'room.jpg', class: 'rounded-circle', style: "width: 45px; height: 45px",  alt: 'Room image' %>
+                  <div class="ms-3">
+                    <p class="fw-bold mb-1"><%= room.name %></p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <p class="fw-normal mb-1"><%= room.capacity %></p>
+              </td>
+              <td>
+                <p class="fw-normal mb-1">$<%= room.price_per_hour %></p>
+              </td>
+              <td>
+                <span class="badge rounded-pill bg-<%= room.active ? 'success' : 'secondary'%>"><%= room.active ? 'Active' : 'Inactive' %></span>
+              </td>
+              <td>
+                <div class="d-inline-flex gap-2">
+                  <%= link_to "View", room, class: "btn btn-sm btn-outline-primary mx-3" %>
+                  <%= link_to "Edit", edit_room_path(room), class: "btn btn-sm btn-outline-secondary mx-3" %>
+                  <%= button_to "Delete", room, method: :delete, class: "btn btn-sm btn-outline-danger d-inline mx-3", form: { data: { turbo_confirm: "Are you sure?" } } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <% @rooms.each do |room| %>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <%= image_tag 'room.jpg', class: 'card-img-top', alt: 'Room image' %>
+            <div class="card-body">
+              <h5 class="card-title"><%= room.name %></h5>
+              <p class="card-text">
+                <strong>Capacity:</strong> <%= room.capacity %><br>
+                <strong>Price/Hour:</strong> $<%= room.price_per_hour %><br>
+                <strong>Status:</strong>
+                <span class="badge <%= room.active? ? 'bg-success' : 'bg-secondary' %>">
+                  <%= room.active? ? 'Active' : 'Inactive' %>
+                </span>
+              </p>
+            </div>
+            <div class="card-footer">
+              <div class="btn-group w-100">
+                <%= link_to "View", room, class: "btn btn-outline-primary" %>
+                <!-- <% if current_user.admin? %> -->
+                  <!-- <%= link_to "Edit", edit_room_path(room), class: "btn btn-outline-secondary" %> -->
+                  <!-- <%= button_to "Delete", room, method: :delete, class: "btn btn-outline-danger btn-danger-group", form: { data: { turbo_confirm: "Are you sure?" } } %> -->
+                <!-- <% else %> -->
+                  <%= link_to "Book Now", new_booking_path(room_id: room.id), class: "btn btn-outline-success #{room.active? ? '' : 'disabled'}" %>
+                <!-- <% end %> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

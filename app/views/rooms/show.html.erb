@@ -1,0 +1,30 @@
+<div class="container mt-5 pt-5">
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <%= image_tag 'room.jpg', class: 'card-img-top', alt: 'Room image' %>
+        <div class="card-body">
+          <h4 class="card-title"><%= @room.name %></h4>
+          <p class="card-text">
+            <strong>Capacity:</strong> <%= @room.capacity %><br>
+            <strong>Price per Hour:</strong> $<%= @room.price_per_hour %><br>
+            <strong>Status:</strong>
+            <span class="badge <%= @room.active? ? 'bg-success' : 'bg-secondary' %>">
+              <%= @room.active? ? 'Active' : 'Inactive' %>
+            </span>
+          </p>
+          <div class="card-footer">
+            <div class="btn-group w-100">
+              <% if current_user.admin? %>
+                <%= link_to "Edit", edit_room_path(@room), class: "btn btn-outline-secondary" %>
+                <%= button_to "Delete", @room, method: :delete, class: "btn btn-outline-danger btn-danger-group", form: { data: { turbo_confirm: "Are you sure?" } } %>
+              <% else %>
+                <%= link_to "Book Now", new_booking_path(room_id: @room.id), class: "btn btn-outline-success #{@room.active? ? '' : 'disabled'}" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
