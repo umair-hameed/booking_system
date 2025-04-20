@@ -1,0 +1,15 @@
+<%= form_with model: @booking, local: true do |f| %>
+  <%= f.hidden_field :room_id, value: @room.id %>
+  <div class="mb-3">
+    <%= f.label :start_time, "Start Time" %>
+    <%= f.datetime_local_field :start_time, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :end_time, "End Time" %>
+    <%= f.datetime_local_field :end_time, class: "form-control", required: true %>
+    <small class="form-text text-muted">Select an end time after the start time to calculate booking hours.</small>
+  </div>
+
+  <%= f.submit "Book Now", class: "btn btn-primary" %>
+<% end %>

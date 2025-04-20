@@ -1,0 +1,59 @@
+<div class="card">
+  <div class="card-header">
+    <h4>Booking Details</h4>
+  </div>
+  <div class="card-body">
+
+    <p><strong>User:</strong> <%= @booking.user.name %></p>
+
+    <p><strong>Room:</strong> <%= @booking.room.name %> 
+      (<%= @booking.room.capacity %> person room - $<%= @booking.room.price_per_hour %>/hr)
+    </p>
+
+    <p><strong>Start Time:</strong> <%= @booking.start_time.strftime("%b %d, %Y %I:%M %p") %></p>
+    <p><strong>End Time:</strong> <%= @booking.end_time.strftime("%b %d, %Y %I:%M %p") %></p>
+
+    <p><strong>Duration:</strong>
+      <%= distance_of_time_in_words(@booking.start_time, @booking.end_time, include_seconds: false) %>
+    </p>
+
+    <p><strong>Total Price:</strong> <%= number_to_currency(@booking.total_price, precision: 2) %></p>
+
+    <p><strong>Status:</strong>
+      <span class="badge <%= status_badge_class(@booking.status) %>">
+        <%= @booking.status.capitalize %>
+      </span>
+    </p>
+
+    <% if @booking.audit_logs.any? %>
+      <hr>
+      <h5>Audit Logs</h5>
+      <ul class="list-group">
+        <% @booking.audit_logs.each do |log| %>
+          <li class="list-group-item d-flex justify-content-between">
+            <span><%= log.action.capitalize %> - <%= log.description %></span>
+            <span class="text-muted"><%= log.timestamp.strftime("%Y-%m-%d %H:%M") %></span>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <hr>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between">
+        <% if current_user.admin? && !@booking.confirmed? && !@booking.cancelled? %>
+          <%= link_to "Confirm Booking", confirm_booking_path(@booking), class: "btn btn-success" %>
+        <% end %>
+        <% if current_user.admin? || !@booking.confirmed? %>
+          <%= link_to "Edit", edit_booking_path(@booking), class: "btn btn-secondary px-5" %>
+        <% end %>
+        <% unless @booking.cancelled? %>
+        <%= button_to "Cancel Booking", cancel_booking_path(@booking), method: :patch,
+              class: "btn btn-danger mx-4",
+              form: { data: { turbo_confirm: "Cancel this booking?" } } %>
+        <% end %>
+      </div>
+      <%= link_to "Back to Booking", bookings_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

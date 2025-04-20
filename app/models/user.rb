@@ -9,4 +9,8 @@ class User < ApplicationRecord
 
   validates :name, :email, :role, presence: true
   validates :email, uniqueness: true
+
+  def active_booking_for(room)
+    bookings.find_by(room: room, status: [:pending, :confirmed])
+  end
 end
