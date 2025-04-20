@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       end
     end
 
+    get 'multiple_bookings_form', to: 'bookings#multiple_bookings_form', as: :multiple_bookings_form
+    post 'multiple_bookings', to: 'bookings#multiple_bookings', as: :multiple_bookings
 
     # Optional: Audit Logs (bonus feature)
     resources :audit_logs, only: [:index]

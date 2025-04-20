@@ -1,0 +1,36 @@
+<div class="col">
+  <h2 class="my-4">Book Multiple Rooms</h2>
+</div>
+<%= form_with url: multiple_bookings_path, method: :post, local: true do %>
+  <div id="room-bookings">
+    <% Room.active.each do |room| %>
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong><%= room.name %></strong>
+          <div>
+            Capacity: <strong><%= room.capacity %></strong>
+          </div>
+          <div>
+            Price/Hour: <strong><%= room.price_per_hour %></strong>
+          </div>
+          <div>
+            <%= check_box_tag "room_ids[]", room.id, false, id: "room_#{room.id}", class: "form-check-input" %>
+            <%= label_tag "room_#{room.id}", "Select", class: "form-check-label" %>
+          </div>
+        </div>
+        <div class="card-body row g-3">
+          <div class="col-md-6">
+            <%= label_tag "start_time_#{room.id}", "Start Time" %>
+            <%= datetime_local_field_tag "booking_times[#{room.id}][start_time]", nil, class: "form-control" %>
+          </div>
+          <div class="col-md-6">
+            <%= label_tag "end_time_#{room.id}", "End Time" %>
+            <%= datetime_local_field_tag "booking_times[#{room.id}][end_time]", nil, class: "form-control" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= submit_tag "Book Selected Rooms", class: "btn btn-primary" %>
+<% end %>

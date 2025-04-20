@@ -36,6 +36,11 @@ class BookingsController < ApplicationController
 
   def update
     if @booking.update(booking_params)
+      @booking.audit_logs.create!(
+        action: "updated",
+        description: "Booking updated.",
+        timestamp: Time.current
+      )
       redirect_to @booking, notice: "Booking updated successfully."
     else
       flash.now[:alert] = "There was an error updating the booking."
@@ -68,6 +73,28 @@ class BookingsController < ApplicationController
     end
   end
 
+  def multiple_bookings_form; end
+
+  def multiple_bookings
+
+    unless params[:room_ids].present?
+      redirect_to multiple_bookings_form_path, alert: "Select Atleast 1 room" and return
+    end
+
+    service = MultipleRoomBookingService.new(
+      user: current_user,
+      room_ids: params[:room_ids] || [],
+      booking_times: params[:booking_times] || {}
+    )
+
+    result = service.call
+
+    if result[:success]
+      redirect_to bookings_path, notice: "Rooms booked successfully!"
+    else
+      redirect_to multiple_bookings_form_path, alert: result[:error]
+    end
+  end
 
   private
 

@@ -10,6 +10,12 @@
         <i class="bi bi-plus-lg"></i> New Room
       <% end %>
     </div>
+  <% else %>
+    <div class="col-auto">
+      <%= link_to multiple_bookings_form_path, class: "btn btn-success" do %>
+        <i class="bi bi-plus-lg"></i> Multiple Rooms Booking
+      <% end %>
+    </div>
   <% end %>
 </div>
 

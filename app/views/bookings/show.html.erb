@@ -25,19 +25,6 @@
       </span>
     </p>
 
-    <% if @booking.audit_logs.any? %>
-      <hr>
-      <h5>Audit Logs</h5>
-      <ul class="list-group">
-        <% @booking.audit_logs.each do |log| %>
-          <li class="list-group-item d-flex justify-content-between">
-            <span><%= log.action.capitalize %> - <%= log.description %></span>
-            <span class="text-muted"><%= log.timestamp.strftime("%Y-%m-%d %H:%M") %></span>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-
     <hr>
     <div class="d-flex justify-content-between">
       <div class="d-flex justify-content-between">
@@ -45,7 +32,7 @@
           <%= link_to "Confirm Booking", confirm_booking_path(@booking), class: "btn btn-success" %>
         <% end %>
         <% if current_user.admin? || !@booking.confirmed? %>
-          <%= link_to "Edit", edit_booking_path(@booking), class: "btn btn-secondary px-5" %>
+          <%= link_to "Edit", edit_booking_path(@booking), class: "btn btn-secondary px-5 mx-5" %>
         <% end %>
         <% unless @booking.cancelled? %>
         <%= button_to "Cancel Booking", cancel_booking_path(@booking), method: :patch,
@@ -57,3 +44,16 @@
     </div>
   </div>
 </div>
+
+<% if @booking.audit_logs.any? %>
+  <h5 class="mt-5">Audit Logs</h5>
+  <hr>
+  <ul class="list-group">
+    <% @booking.audit_logs.each do |log| %>
+      <li class="list-group-item d-flex justify-content-between">
+        <span><%= log.action.capitalize %> - <%= log.description %></span>
+        <span class="text-muted"><%= log.timestamp.strftime("%Y-%m-%d %H:%M") %></span>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
